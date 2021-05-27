@@ -1,32 +1,35 @@
-name: CI setp for go
+name: CI setup for Go
 
-on: 
-   push:
-     branches: [main, master]
-     
-     
+on:
+  push:
+    branches: [main]
+    
 jobs:
-  my-job: 
+  my-job:
     name: My Job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     steps:
     - name: Print a greeting
       run: |
-         echo Hi there!
-         ls
+        ls
+        echo Hello there!
     - name: Setup Go environment
       uses: actions/setup-go@v2.1.3
       with:
-         # The Go version to download (if necessary) and use. Supports semver spec and ranges.
-         go-version: 1.12
-    - name: Check Go version
+        # The Go version to download (if necessary) and use. Supports semver spec and ranges.
+        go-version: 1.13.7
+    
+    - name: Check Go Version
       run: |
-           go version
-           ls
-    - name: checkout new codes
+        go version
+        ls
+    
+    - name: Checkout my codes
       uses: actions/checkout@v2
-    - name: list files
+   
+    - name: Check file system
       run: |
-         ls
-         cat calc.go
-         
+        ls
+        cat calc.go
+      
+        
