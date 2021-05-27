@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Release on GitHub
+    name: Release in GitHub
     runs-on: ubuntu-latest
     steps:
       - name: Check out codes
