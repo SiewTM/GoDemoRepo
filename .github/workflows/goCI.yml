@@ -55,20 +55,47 @@ jobs:
         go get github.com/franela/goblin
         go get github.com/tebeka/go2xunit
         go test -v  | go2xunit > report.xml
+        
+         - name: Generate test report
+      run: |
+        go test -v | go2xunit > report.xml
         go test -v
         ls
+        
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
         files: report.xml
-    - if: ${{ failure() }}
+        
+    - if: ${{ failure() }} 
       name: Create Issues
       uses: nashmaniac/create-issue-action@v1.1
       with:
-          title: Build Failed
-          token: ${{secrets.GITHUB_TOKEN}}
-          assignees: ${{github.actor}}
-          labels: workflow-failed
-          body: Workflow failed for commit ${{github.sha}}
-    
+        title: Build Failed
+        token: ${{secrets.GITHUB_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: workflow-failed
+        body: Workflow failed for commit ${{github.sha}}
+        
+    - if: ${{ success() }}
+      name: Create download directory
+      run: mkdir downloads
+      
+    - name: Prepare Documents
+      run: |
+        mv report.xml ./downloads
+        
+    - if: ${{ success() }}
+      name: Prepare artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: assetDocuments
+        path: downloads
+        
+    - if: ${{ success() }}
+      name: Download Content
+      uses: actions/download-artifact@v2
+      with:
+        name: assetDocuments
+        
